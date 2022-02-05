@@ -1,6 +1,7 @@
 <?php
 namespace me\database;
 use me\core\Component;
+use me\core\components\Container;
 /**
  * @property string $default Default Connection
  */
@@ -44,7 +45,7 @@ class DatabaseManager extends Component {
             //if (!is_array($this->connections[$name])) {
             //    throw new Exception("");
             //}
-            $this->connections[$name] = Me::createObject(array_merge($this->connectionConfig, $this->connections[$name]));
+            $this->connections[$name] = Container::build(array_merge($this->connectionConfig, $this->connections[$name]));
         }
         return $this->connections[$name];
     }
