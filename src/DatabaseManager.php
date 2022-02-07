@@ -1,5 +1,6 @@
 <?php
 namespace me\database;
+use Exception;
 use me\core\Component;
 use me\core\components\Container;
 /**

@@ -11,7 +11,7 @@ class Command extends Component {
      * @param string $sql Raw SQL
      * @param array $params SQL Parameters
      */
-    public function fetchAll($sql, $params) {
+    public function fetchAll($sql, $params = []) {
         /* @var $statement \PDOStatement */
         $statement = $this->connection->pdo->prepare($sql);
         foreach ($params as $key => $value) {
