@@ -36,11 +36,24 @@ class Connection extends Component {
      */
     public $pdo;
     /**
+     * @var \me\database\Command
+     */
+    private $_command;
+    /**
      * 
      */
     public function init() {
         if ($this->pdo === null) {
             $this->pdo = new PDO("$this->driver:host=$this->host;port=$this->port;dbname=$this->database", $this->username, $this->password, $this->options);
         }
+    }
+    /**
+     * @return \me\database\Command Command
+     */
+    public function getCommand() {
+        if (is_null($this->_command)) {
+            $this->_command = new Command(['connection' => $this]);
+        }
+        return $this->_command;
     }
 }

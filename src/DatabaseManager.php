@@ -49,4 +49,11 @@ class DatabaseManager extends Component {
         }
         return $this->connections[$name];
     }
+    /**
+     * @param string $connection Connection Name
+     * @return \me\database\Command Command
+     */
+    public function getCommand($connection = null) {
+        return $this->getConnection($connection)->getCommand();
+    }
 }
