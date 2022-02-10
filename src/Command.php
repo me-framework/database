@@ -10,27 +10,41 @@ class Command extends Component {
     /**
      * @param string $sql Raw SQL
      * @param array $params SQL Parameters
+     * @return mixed
      */
-    public function fetchAll($sql, $params = []) {
+    private function queryInternal($sql, $params, $method, $fetchMode) {
         /* @var $statement \PDOStatement */
         $statement = $this->connection->pdo->prepare($sql);
         foreach ($params as $key => $value) {
             $statement->bindValue($key, $value);
         }
         $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $result = call_user_func_array([$statement, $method], (array) $fetchMode);
+        $statement->closeCursor();
+        return $result;
     }
     /**
      * @param string $sql Raw SQL
      * @param array $params SQL Parameters
+     * @return array records
      */
-    public function fetchOne($sql, $params) {
-        /* @var $statement \PDOStatement */
-        $statement = $this->connection->pdo->prepare($sql);
-        foreach ($params as $key => $value) {
-            $statement->bindValue($key, $value);
-        }
-        $statement->execute();
-        return $statement->fetch(PDO::FETCH_ASSOC);
+    public function fetchAll($sql, $params = []) {
+        return $this->queryInternal($sql, $params, 'fetchAll', PDO::FETCH_ASSOC);
+    }
+    /**
+     * @param string $sql Raw SQL
+     * @param array $params SQL Parameters
+     * @return array record
+     */
+    public function fetchOne($sql, $params = []) {
+        return $this->queryInternal($sql, $params, 'fetch', PDO::FETCH_ASSOC);
+    }
+    /**
+     * @param string $sql Raw SQL
+     * @param array $params SQL Parameters
+     * @return string|int|null|false the value of the first column in the first row of the query result.
+     */
+    public function queryScalar($sql, $params) {
+        return $this->queryInternal($sql, $params, 'fetchColumn', 0);
     }
 }
