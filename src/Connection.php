@@ -44,4 +44,11 @@ class Connection extends Component {
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
     }
+    /**
+     * @param string $name Sequence Name
+     * @return string Row ID
+     */
+    public function lastInsertId($name = null) {
+        return $this->pdo->lastInsertId($name);
+    }
 }
