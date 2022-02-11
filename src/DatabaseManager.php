@@ -46,7 +46,7 @@ class DatabaseManager extends Component {
             throw new Exception("Database { $name } not exists.");
         }
         if (is_array($this->connections[$name])) {
-            $this->connections[$name] = Container::build(array_merge($this->connectionConfig, $this->connections[$name], ['name' => $name]));
+            $this->connections[$name] = Container::build(array_merge($this->connectionConfig, $this->connections[$name]));
         }
         if (!($this->connections[$name] instanceof Connection)) {
             throw new Exception('Connection shuld be instanceof ' . Connection::class);

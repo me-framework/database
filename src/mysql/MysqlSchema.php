@@ -71,10 +71,11 @@ class MysqlSchema extends Schema {
      * @param \me\database\TableSchema $table Table Schema
      */
     protected function findColumns($table) {
+        $connection = $this->connection;
         [$sql, $params] = $this->getQueryBuilder()->findColumns($table);
-        $columns = $this->connection->getCommand()->fetchAll($sql, $params);
+        $columns = $this->database->getCommand()->fetchAll($connection, $sql, $params);
         foreach ($columns as $info) {
-            if ($this->connection->pdo->getAttribute(PDO::ATTR_CASE) !== PDO::CASE_LOWER) {
+            if ($connection->pdo->getAttribute(PDO::ATTR_CASE) !== PDO::CASE_LOWER) {
                 $info = array_change_key_case($info, CASE_LOWER);
             }
             $column = $this->loadColumnSchema($info);
