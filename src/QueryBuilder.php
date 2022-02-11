@@ -48,4 +48,44 @@ abstract class QueryBuilder extends Component {
         $params[$phName] = $value;
         return $phName;
     }
+    /**
+     * @param string $table_name Table Name
+     * @param array $values Values
+     * @return array [string $sql, array $params]
+     */
+    public function insert($table_name, $values) {
+        $params  = [];
+        $clauses = [
+            'INSERT INTO ' . $this->quote($table_name),
+            $this->buildInsertFields($values),
+            $this->buildInsertValues($values, $params)
+        ];
+        $sql     = implode($this->separator, array_filter($clauses));
+        return [$sql, $params];
+    }
+    public function buildInsertFields($values) {
+        return '';
+    }
+    public function buildInsertValues($values) {
+        return '';
+    }
+    /**
+     * @param string $table_name Table Name
+     * @param array $values Values
+     * @param array $condition Condition
+     * @return array [string $sql, array $params]
+     */
+    public function update($table_name, $values, $condition) {
+        $params  = [];
+        $clauses = [
+            'UPDATE ' . $this->quote($table_name),
+            $this->buildUpdateSets($values, $params),
+            $this->buildWhere($condition, $params)
+        ];
+        $sql     = implode($this->separator, array_filter($clauses));
+        return [$sql, $params];
+    }
+    public function buildUpdateSets($values, &$params) {
+        
+    }
 }
