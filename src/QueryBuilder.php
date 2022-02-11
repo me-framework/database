@@ -54,20 +54,15 @@ abstract class QueryBuilder extends Component {
      * @return array [string $sql, array $params]
      */
     public function insert($table_name, $values) {
-        $params  = [];
-        $clauses = [
-            'INSERT INTO ' . $this->quote($table_name),
-            $this->buildInsertFields($values),
-            $this->buildInsertValues($values, $params)
-        ];
-        $sql     = implode($this->separator, array_filter($clauses));
+        $names        = [];
+        $params       = [];
+        $placeholders = [];
+        foreach ($values as $name => $value) {
+            $names[]        = $this->quote($name);
+            $placeholders[] = $this->bindParam($value, $params);
+        }
+        $sql = 'INSERT INTO ' . $this->quote($table_name) . ' (' . implode(', ', $names) . ') VALUES (' . implode(', ', $placeholders) . ')';
         return [$sql, $params];
-    }
-    public function buildInsertFields($values) {
-        return '';
-    }
-    public function buildInsertValues($values) {
-        return '';
     }
     /**
      * @param string $table_name Table Name
@@ -79,13 +74,31 @@ abstract class QueryBuilder extends Component {
         $params  = [];
         $clauses = [
             'UPDATE ' . $this->quote($table_name),
-            $this->buildUpdateSets($values, $params),
+            'SET ' . $this->buildUpdateSets($values, $params),
             $this->buildWhere($condition, $params)
         ];
         $sql     = implode($this->separator, array_filter($clauses));
         return [$sql, $params];
     }
     public function buildUpdateSets($values, &$params) {
-        
+        $sets = [];
+        foreach ($values as $name => $value) {
+            $sets[] = $this->quote($name) . '=' . $this->bindParam($value, $params);
+        }
+        return implode(', ', $sets);
+    }
+    /**
+     * @param string $table_name Table Name
+     * @param array $condition Condition
+     * @return array [string $sql, array $params]
+     */
+    public function delete($table_name, $condition) {
+        $params  = [];
+        $clauses = [
+            'DELETE FROM ' . $this->quote($table_name),
+            $this->buildWhere($condition, $params)
+        ];
+        $sql     = implode($this->separator, array_filter($clauses));
+        return [$sql, $params];
     }
 }
