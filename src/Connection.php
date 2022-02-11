@@ -36,10 +36,6 @@ class Connection extends Component {
      */
     public $pdo;
     /**
-     * @var \me\database\Command
-     */
-    private $_command;
-    /**
      * 
      */
     public function init() {
@@ -47,14 +43,5 @@ class Connection extends Component {
             $this->pdo = new PDO("$this->driver:host=$this->host;port=$this->port;dbname=$this->database", $this->username, $this->password, $this->options);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-    }
-    /**
-     * @return \me\database\Command Command
-     */
-    public function getCommand() {
-        if (is_null($this->_command)) {
-            $this->_command = new Command(['connection' => $this]);
-        }
-        return $this->_command;
     }
 }
