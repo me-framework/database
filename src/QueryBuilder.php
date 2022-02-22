@@ -17,6 +17,16 @@ abstract class QueryBuilder extends Component {
      */
     abstract public function findColumns($table);
     /**
+     * @param mixed $value Value
+     * @param array $params SQL Parameters
+     * @return string phName
+     */
+    public function bindParam($value, &$params) {
+        $phName          = $this->param_prefix . count($params);
+        $params[$phName] = $value;
+        return $phName;
+    }
+    /**
      * @param \me\database\Query $query Query
      * @return array [string $sql, array $params]
      */
@@ -37,16 +47,6 @@ abstract class QueryBuilder extends Component {
         $sql = implode($this->separator, array_filter($clauses));
 
         return [$sql, $params];
-    }
-    /**
-     * @param mixed $value Value
-     * @param array $params SQL Parameters
-     * @return string phName
-     */
-    public function bindParam($value, &$params) {
-        $phName          = $this->param_prefix . count($params);
-        $params[$phName] = $value;
-        return $phName;
     }
     /**
      * @param string $table_name Table Name
@@ -80,13 +80,6 @@ abstract class QueryBuilder extends Component {
         $sql     = implode($this->separator, array_filter($clauses));
         return [$sql, $params];
     }
-    public function buildUpdateSets($values, &$params) {
-        $sets = [];
-        foreach ($values as $name => $value) {
-            $sets[] = $this->quote($name) . '=' . $this->bindParam($value, $params);
-        }
-        return implode(', ', $sets);
-    }
     /**
      * @param string $table_name Table Name
      * @param array $condition Condition
@@ -100,5 +93,15 @@ abstract class QueryBuilder extends Component {
         ];
         $sql     = implode($this->separator, array_filter($clauses));
         return [$sql, $params];
+    }
+    /**
+     * 
+     */
+    public function buildUpdateSets($values, &$params) {
+        $sets = [];
+        foreach ($values as $name => $value) {
+            $sets[] = $this->quote($name) . '=' . $this->bindParam($value, $params);
+        }
+        return implode(', ', $sets);
     }
 }
