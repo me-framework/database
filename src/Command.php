@@ -1,6 +1,7 @@
 <?php
 namespace me\database;
 use PDO;
+use me\core\Cache;
 use me\core\Component;
 class Command extends Component {
     /**
@@ -10,6 +11,14 @@ class Command extends Component {
      * @return mixed
      */
     private function queryInternal($connection, $sql, $params, $method, $fetchMode) {
+        $command = Cache::getCache(['command', 'command']);
+        if ($command === null) {
+            Cache::setCache(['command', 'command'], [[$sql, $params]]);
+        }
+        else {
+            $command[] = [$sql, $params];
+            Cache::setCache(['command', 'command'], $command);
+        }
         /* @var $statement \PDOStatement */
         $statement = $connection->pdo->prepare($sql);
         foreach ($params as $key => $value) {

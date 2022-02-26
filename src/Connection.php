@@ -38,7 +38,7 @@ class Connection extends Component {
     /**
      * 
      */
-    public function init() {
+    protected function init() {
         if ($this->pdo === null) {
             $this->pdo = new PDO("$this->driver:host=$this->host;port=$this->port;dbname=$this->database", $this->username, $this->password, $this->options);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

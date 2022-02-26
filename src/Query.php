@@ -42,7 +42,7 @@ class Query extends Component {
 
         $connection = $this->schema->connection;
         [$sql, $params] = $this->getQueryBuilder()->build($this);
-        $rows = $this->getCommand()->fetchAll($connection, $sql, $params);
+        $rows       = $this->getCommand()->fetchAll($connection, $sql, $params);
 
         if ($rows === false || empty($rows)) {
             return [];
@@ -74,7 +74,7 @@ class Query extends Component {
 
         $connection = $this->schema->connection;
         [$sql, $params] = $this->getQueryBuilder()->build($this);
-        $row = $this->getCommand()->fetchOne($connection, $sql, $params);
+        $row        = $this->getCommand()->fetchOne($connection, $sql, $params);
 
         if ($row === false) {
             return null;
@@ -106,6 +106,7 @@ class Query extends Component {
     public function max($column) {
         return $this->queryScalar("MAX($column)");
     }
+    //
     protected function queryScalar($select) {
         $q = new self([
             'schema'     => $this->schema,
@@ -118,5 +119,12 @@ class Query extends Component {
         $connection = $this->schema->connection;
         [$sql, $params] = $this->getQueryBuilder()->build($q);
         return $this->getCommand()->queryScalar($connection, $sql, $params);
+    }
+    //
+    /**
+     * @param array|string $names relations
+     */
+    public function with($names) {
+        return $this;
     }
 }
