@@ -14,6 +14,10 @@ class Query extends Component {
      */
     public $modelClass;
     /**
+     * 
+     */
+    public $with;
+    /**
      * @return \me\database\Command Command
      */
     public function getCommand() {
@@ -56,7 +60,7 @@ class Query extends Component {
         foreach ($rows as $row) {
             /* @var $modelClass \me\database\RecordInterface */
             $modelClass = new $this->modelClass;
-            $modelClass->populate($row);
+            $modelClass->populate($row, $this);
             if ($this->indexBy === null) {
                 $models[] = $modelClass;
             }
@@ -86,7 +90,7 @@ class Query extends Component {
 
         /* @var $modelClass \me\database\RecordInterface */
         $modelClass = new $this->modelClass;
-        $modelClass->populate($row);
+        $modelClass->populate($row, $this);
 
         return $modelClass;
     }
@@ -125,6 +129,7 @@ class Query extends Component {
      * @param array|string $names relations
      */
     public function with($names) {
+        $this->with = $names;
         return $this;
     }
 }
