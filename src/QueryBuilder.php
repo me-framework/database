@@ -2,8 +2,7 @@
 namespace me\database;
 use me\core\Component;
 abstract class QueryBuilder extends Component {
-    use querybuilder\BaseTrait;
-    use querybuilder\WhereTrait;
+    use querybuilder\BaseTrait, querybuilder\RelationTrait, querybuilder\WhereTrait;
     public $separator    = ' ';
     public $param_prefix = ':me';
     /**

@@ -8,9 +8,24 @@ class Command extends Component {
      * @param \me\database\Connection $connection Connection
      * @param string $sql Raw SQL
      * @param array $params SQL Parameters
+     * @param string $method Method
      * @return mixed
      */
     private function queryInternal($connection, $sql, $params, $method, $fetchMode) {
+        $this->cache($sql, $params);
+        $statement = $connection->prepare($sql);
+        foreach ($params as $key => $value) {
+            $statement->bindValue($key, $value);
+        }
+        $statement->execute();
+        $result = call_user_func_array([$statement, $method], (array) $fetchMode);
+        $statement->closeCursor();
+        return $result;
+    }
+    /**
+     * 
+     */
+    private function cache($sql, $params) {
         $command = Cache::getCache(['command', 'command']);
         if ($command === null) {
             Cache::setCache(['command', 'command'], [[$sql, $params]]);
@@ -19,15 +34,6 @@ class Command extends Component {
             $command[] = [$sql, $params];
             Cache::setCache(['command', 'command'], $command);
         }
-        /* @var $statement \PDOStatement */
-        $statement = $connection->pdo->prepare($sql);
-        foreach ($params as $key => $value) {
-            $statement->bindValue($key, $value);
-        }
-        $statement->execute();
-        $result = call_user_func_array([$statement, $method], (array) $fetchMode);
-        $statement->closeCursor();
-        return $result;
     }
     /**
      * @param \me\database\Connection $connection Connection

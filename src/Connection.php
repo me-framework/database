@@ -46,6 +46,12 @@ class Connection extends Component {
         }
     }
     /**
+     * @return \PDOStatement PDO Statement
+     */
+    public function prepare($sql) {
+        return $this->pdo->prepare($sql);
+    }
+    /**
      * @param string $name Sequence Name
      * @return string Row ID
      */

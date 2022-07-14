@@ -23,6 +23,23 @@ class DatabaseManager extends Component {
      */
     public $connectionConfig = ['class' => Connection::class];
     /**
+     * @var \me\database\Command Command
+     */
+    private $_command;
+    /**
+     * @var \me\database\Schema[]
+     */
+    private $_schema  = [];
+    /**
+     * @var array
+     */
+    public $schemaMap = [
+        'mysql'  => MysqlSchema::class, // MySQL
+        'pgsql'  => PgsqlSchema::class, // PostgreSQL
+        'mssql'  => MssqlSchema::class, // older MSSQL driver on MS Windows hosts
+        'sqlsrv' => MssqlSchema::class, // newer MSSQL driver on MS Windows hosts
+    ];
+    /**
      * 
      */
     public function setDefault($value) {
@@ -54,10 +71,6 @@ class DatabaseManager extends Component {
         return $this->connections[$name];
     }
     /**
-     * @var \me\database\Command Command
-     */
-    private $_command;
-    /**
      * @return \me\database\Command Command
      */
     public function getCommand() {
@@ -66,19 +79,6 @@ class DatabaseManager extends Component {
         }
         return $this->_command;
     }
-    /**
-     * @var \me\database\Schema[]
-     */
-    private $_schema  = [];
-    /**
-     * @var array
-     */
-    public $schemaMap = [
-        'mysql'  => MysqlSchema::class, // MySQL
-        'pgsql'  => PgsqlSchema::class, // PostgreSQL
-        'mssql'  => MssqlSchema::class, // older MSSQL driver on MS Windows hosts
-        'sqlsrv' => MssqlSchema::class, // newer MSSQL driver on MS Windows hosts
-    ];
     /**
      * @param string $name Connection Name
      * @return \me\database\Schema Schema
@@ -90,9 +90,9 @@ class DatabaseManager extends Component {
                 throw new Exception("Schema { <b>$this->driver</b> } Not Found");
             }
             $this->_schema[$name] = Container::build([
-                        'class'      => $this->schemaMap[$connection->driver],
-                        'database'   => $this,
-                        'connection' => $connection
+                'class'      => $this->schemaMap[$connection->driver],
+                'database'   => $this,
+                'connection' => $connection
             ]);
         }
         return $this->_schema[$name];
