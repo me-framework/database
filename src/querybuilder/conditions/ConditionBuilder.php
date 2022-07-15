@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 use me\core\Component;
 abstract class ConditionBuilder extends Component {
     /**

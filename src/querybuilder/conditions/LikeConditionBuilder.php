@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 use Exception;
 class LikeConditionBuilder extends ConditionBuilder {
     protected $escapingReplacements = [
@@ -9,7 +9,7 @@ class LikeConditionBuilder extends ConditionBuilder {
     ];
     protected $escapeCharacter;
     /**
-     * @param \me\database\conditions\LikeCondition $expression
+     * @param \me\database\querybuilder\conditions\LikeCondition $expression
      * @param array $params the binding parameters.
      */
     public function build($expression, &$params) {

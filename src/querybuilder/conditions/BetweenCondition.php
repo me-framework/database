@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 use Exception;
 class BetweenCondition extends Condition {
     private $operator;

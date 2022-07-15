@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 abstract class ConjunctionCondition extends Condition {
     protected $expressions;
     public function __construct($expressions) {

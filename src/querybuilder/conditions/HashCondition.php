@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 class HashCondition extends Condition {
     /**
      * @var array|null the condition specification.

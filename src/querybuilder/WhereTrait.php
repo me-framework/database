@@ -1,34 +1,33 @@
 <?php
 namespace me\database\querybuilder;
 use Exception;
-use me\database\conditions\Condition;
-use me\database\conditions\HashCondition;
+use me\database\querybuilder\conditions;
 trait WhereTrait {
     public $conditionClasses  = [
-        'AND'         => 'me\database\conditions\AndCondition',
-        'OR'          => 'me\database\conditions\OrCondition',
-        'NOT'         => 'me\database\conditions\NotCondition',
-        'IN'          => 'me\database\conditions\InCondition',
-        'NOT IN'      => 'me\database\conditions\InCondition',
-        'LIKE'        => 'me\database\conditions\LikeCondition',
-        'NOT LIKE'    => 'me\database\conditions\LikeCondition',
-        'BETWEEN'     => 'me\database\conditions\BetweenCondition',
-        'NOT BETWEEN' => 'me\database\conditions\BetweenCondition',
+        'AND'         => conditions\AndCondition::class,
+        'OR'          => conditions\OrCondition::class,
+        'NOT'         => conditions\NotCondition::class,
+        'IN'          => conditions\InCondition::class,
+        'NOT IN'      => conditions\InCondition::class,
+        'LIKE'        => conditions\LikeCondition::class,
+        'NOT LIKE'    => conditions\LikeCondition::class,
+        'BETWEEN'     => conditions\BetweenCondition::class,
+        'NOT BETWEEN' => conditions\BetweenCondition::class,
     ];
     public $conditionBuilders = [
-        'me\database\conditions\HashCondition'          => 'me\database\conditions\HashConditionBuilder',
-        'me\database\conditions\SimpleCondition'        => 'me\database\conditions\SimpleConditionBuilder',
-        'me\database\conditions\ConjunctionCondition'   => 'me\database\conditions\ConjunctionConditionBuilder',
-        'me\database\conditions\AndCondition'           => 'me\database\conditions\ConjunctionConditionBuilder',
-        'me\database\conditions\OrCondition'            => 'me\database\conditions\ConjunctionConditionBuilder',
-        'me\database\conditions\NotCondition'           => 'me\database\conditions\NotConditionBuilder',
-        'me\database\conditions\InCondition'            => 'me\database\conditions\InConditionBuilder',
-        'me\database\conditions\LikeCondition'          => 'me\database\conditions\LikeConditionBuilder',
-        'me\database\conditions\BetweenCondition'       => 'me\database\conditions\BetweenConditionBuilder',
-        'me\database\conditions\BetweenColumnCondition' => 'me\database\conditions\BetweenColumnConditionBuilder',
+        conditions\HashCondition::class           => conditions\HashConditionBuilder::class,
+        conditions\SimpleCondition::class         => conditions\SimpleConditionBuilder::class,
+        conditions\ConjunctionCondition::class    => conditions\ConjunctionConditionBuilder::class,
+        conditions\AndCondition::class            => conditions\ConjunctionConditionBuilder::class,
+        conditions\OrCondition::class             => conditions\ConjunctionConditionBuilder::class,
+        conditions\NotCondition::class            => conditions\NotConditionBuilder::class,
+        conditions\InCondition::class             => conditions\InConditionBuilder::class,
+        conditions\LikeCondition::class           => conditions\LikeConditionBuilder::class,
+        conditions\BetweenCondition::class        => conditions\BetweenConditionBuilder::class,
+        conditions\BetweenColumnsCondition::class => conditions\BetweenColumnsConditionBuilder::class,
     ];
     /**
-     * @param array|string|\me\database\conditions\Condition $condition Conditions
+     * @param array|string|\me\database\querybuilder\conditions\Condition $condition Conditions
      * @param array $params SQL Parameters
      * @return string
      */
@@ -37,7 +36,7 @@ trait WhereTrait {
         return $where === '' ? '' : 'WHERE ' . $where;
     }
     /**
-     * @param array|string|\me\database\conditions\Condition $condition Condition
+     * @param array|string|\me\database\querybuilder\conditions\Condition $condition Condition
      * @param array $params SQL Parameters
      * @return string Raw Condition
      */
@@ -56,23 +55,23 @@ trait WhereTrait {
     }
     /**
      * @param array $condition Condition Array
-     * @return \me\database\conditions\Condition Condition Object
+     * @return \me\database\querybuilder\conditions\Condition Condition Object
      */
     public function createConditionFromArray($condition) {
         if (isset($condition[0])) {
             $operator  = strtoupper(array_shift($condition));
-            /** @var \me\database\conditions\Condition $className */
-            $className = 'me\database\conditions\SimpleCondition';
+            /** @var \me\database\querybuilder\conditions\Condition $className */
+            $className = conditions\SimpleCondition::class;
             if (isset($this->conditionClasses[$operator])) {
                 $className = $this->conditionClasses[$operator];
             }
             return $className::fromArrayDefinition($operator, $condition);
         }
-        return new HashCondition($condition);
+        return new conditions\HashCondition($condition);
     }
     /**
-     * @param \me\database\conditions\Condition $condition Condition
-     * @return \me\database\conditions\ConditionBuilder Condition Builder
+     * @param \me\database\querybuilder\conditions\Condition $condition Condition
+     * @return \me\database\querybuilder\conditions\ConditionBuilder Condition Builder
      */
     public function getConditionBuilder($condition) {
         $className = get_class($condition);

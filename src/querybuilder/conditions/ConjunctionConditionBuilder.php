@@ -1,8 +1,8 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 class ConjunctionConditionBuilder extends ConditionBuilder {
     /**
-     * @param \me\database\conditions\ConjunctionCondition $condition
+     * @param \me\database\querybuilder\conditions\ConjunctionCondition $condition
      * @param array $params
      */
     public function build($condition, &$params) {
@@ -16,7 +16,7 @@ class ConjunctionConditionBuilder extends ConditionBuilder {
         return '(' . implode(") {$condition->getOperator()} (", $parts) . ')';
     }
     /**
-     * @param \me\database\conditions\ConjunctionCondition $condition1
+     * @param \me\database\querybuilder\conditions\ConjunctionCondition $condition1
      * @param array $params
      */
     private function buildExpressionsFrom($condition1, &$params = []) {

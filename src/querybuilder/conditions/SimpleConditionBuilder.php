@@ -1,11 +1,11 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 class SimpleConditionBuilder extends ConditionBuilder {
     /**
      * Method builds the raw SQL from the $expression that will not be additionally
      * escaped or quoted.
      *
-     * @param \me\database\conditions\SimpleCondition $condition the condition to be built.
+     * @param \me\database\querybuilder\conditions\SimpleCondition $condition the condition to be built.
      * @param array $params the binding parameters.
      * @return string the raw SQL that will not be additionally escaped or quoted.
      */

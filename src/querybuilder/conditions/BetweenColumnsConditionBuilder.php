@@ -1,5 +1,5 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 class BetweenColumnsConditionBuilder extends ConditionBuilder {
     public function build($expression, &$params) {
         $operator = $expression->getOperator();

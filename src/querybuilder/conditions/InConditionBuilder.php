@@ -1,8 +1,8 @@
 <?php
-namespace me\database\conditions;
+namespace me\database\querybuilder\conditions;
 class InConditionBuilder extends ConditionBuilder {
     /**
-     * @param \me\database\conditions\InCondition $expression
+     * @param \me\database\querybuilder\conditions\InCondition $expression
      * @param array $params
      */
     public function build($expression, &$params) {
