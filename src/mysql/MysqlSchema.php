@@ -75,8 +75,8 @@ class MysqlSchema extends Schema {
         $column->comment       = $info['comment'];
         $column->dbType        = $info['type'];
         $column->unsigned      = stripos($column->dbType, 'unsigned') !== false;
-        $column->type          = self::TYPE_STRING;
-        $column->phpType       = self::TYPE_STRING;
+        $column->type          = 'string';
+        $column->phpType       = 'string';
         if (!$column->isPrimaryKey) {
             if (($column->type === 'timestamp' || $column->type === 'datetime') && preg_match('/^current_timestamp(?:\(([0-9]*)\))?$/i', $info['default'], $matches)) {
                 $column->defaultValue = new Expression('CURRENT_TIMESTAMP' . (!empty($matches[1]) ? '(' . $matches[1] . ')' : ''));

@@ -47,7 +47,7 @@ trait WhereTrait {
             }
             $condition = $this->createConditionFromArray($condition);
         }
-        if ($condition instanceof Condition) {
+        if ($condition instanceof conditions\Condition) {
             $builder = $this->getConditionBuilder($condition);
             return $builder->build($condition, $params);
         }
