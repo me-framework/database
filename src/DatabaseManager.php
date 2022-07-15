@@ -3,6 +3,7 @@ namespace me\database;
 use Exception;
 use me\core\Component;
 use me\core\components\Container;
+use me\core\exceptions\HttpNotFound;
 use me\database\mysql\MysqlSchema;
 use me\database\pgsql\PgsqlSchema;
 use me\database\mssql\MssqlSchema;
@@ -60,7 +61,7 @@ class DatabaseManager extends Component {
             $name = $this->getDefault();
         }
         if (!array_key_exists($name, $this->connections)) {
-            throw new Exception("Database { $name } not exists.");
+            throw new HttpNotFound("Schema { $name } Not Found.");
         }
         if (is_array($this->connections[$name])) {
             $this->connections[$name] = Container::build(array_merge($this->connectionConfig, $this->connections[$name]));
@@ -87,7 +88,7 @@ class DatabaseManager extends Component {
         if (!isset($this->_schema[$name])) {
             $connection = $this->getConnection($name);
             if (!isset($this->schemaMap[$connection->driver])) {
-                throw new Exception("Schema { <b>$this->driver</b> } Not Found");
+                throw new HttpNotFound("DB Driver { <b>$this->driver</b> } Not Found");
             }
             $this->_schema[$name] = Container::build([
                 'class'      => $this->schemaMap[$connection->driver],
