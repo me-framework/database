@@ -90,22 +90,20 @@ trait BaseTrait {
             $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
         }
         $select = [];
-        foreach ($columns as $columnAlias => $columnDefinition) {
-            if (is_string($columnAlias)) {
-                $select[$columnAlias] = $columnDefinition;
+        foreach ($columns as $alias => $columnName) {
+            if (is_string($alias)) {
+                $select[$columnName] = $alias;
                 continue;
             }
-            if (is_string($columnDefinition)) {
-                if (preg_match('/^(.*?)(?i:\s+as\s+|\s+)([\w\-_\.]+)$/', $columnDefinition, $matches) && !preg_match('/^\d+$/', $matches[2]) && strpos($matches[2], '.') === false) {
-                    $select[$matches[2]] = $matches[1];
-                    continue;
-                }
-                if (strpos($columnDefinition, '(') === false) {
-                    $select[$columnDefinition] = $columnDefinition;
-                    continue;
-                }
+            if (is_string($columnName) && preg_match('/^(.*?)(?i:\s+as\s+|\s+)([\w\-_\.]+)$/', $columnName, $matches)) {
+                $select[$matches[2]] = $matches[1];
+                continue;
             }
-            $select[] = $columnDefinition;
+            if (is_string($columnName) && strpos($columnName, '(') === false) {
+                $select[] = $columnName;
+                continue;
+            }
+            $select[] = $columnName;
         }
         return $select;
     }
@@ -125,14 +123,14 @@ trait BaseTrait {
         if (is_array($columns)) {
             return $columns;
         }
-        $columns = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
+        $fields = preg_split('/\s*,\s*/', trim($columns), -1, PREG_SPLIT_NO_EMPTY);
         $result  = [];
-        foreach ($columns as $column) {
-            if (preg_match('/^(.*?)\s+(asc|desc)$/i', $column, $matches)) {
+        foreach ($fields as $field) {
+            if (preg_match('/^(.*?)\s+(asc|desc)$/i', $field, $matches)) {
                 $result[$matches[1]] = strcasecmp($matches[2], 'desc') ? SORT_ASC : SORT_DESC;
             }
             else {
-                $result[$column] = SORT_ASC;
+                $result[$field] = SORT_ASC;
             }
         }
         return $result;

@@ -49,7 +49,6 @@ trait BaseTrait {
         }
         return 'SELECT ' . implode(', ', $columns);
     }
-    //
     /**
      * @param array $tables Table Names
      * @return string
@@ -61,32 +60,6 @@ trait BaseTrait {
         $tables = $this->quoteTableNames($tables);
         return 'FROM ' . implode(', ', $tables);
     }
-    private function quoteTableNames($tables) {
-        foreach ($tables as $i => $table) {
-            if (is_string($i)) {
-                if (strpos($table, '(') === false) {
-                    $table = $this->quote($table);
-                }
-                $tables[$i] = "$table " . $this->quote($i);
-            }
-            elseif (strpos($table, '(') === false) {
-                if ($tableWithAlias = $this->extractAlias($table)) {
-                    $tables[$i] = $this->quote($tableWithAlias[1]) . ' ' . $this->quote($tableWithAlias[2]);
-                }
-                else {
-                    $tables[$i] = $this->quote($table);
-                }
-            }
-        }
-        return $tables;
-    }
-    protected function extractAlias($table) {
-        if (preg_match('/^(.*?)(?i:\s+as|)\s+([^ ]+)$/', $table, $matches)) {
-            return $matches;
-        }
-        return false;
-    }
-    //
     /**
      * @param array $columns Columns
      * @return string
@@ -130,5 +103,31 @@ trait BaseTrait {
             $sql .= ' OFFSET ' . $offset;
         }
         return ltrim($sql);
+    }
+    //
+    private function quoteTableNames($tables) {
+        foreach ($tables as $i => $table) {
+            if (is_string($i)) {
+                if (strpos($table, '(') === false) {
+                    $table = $this->quote($table);
+                }
+                $tables[$i] = "$table " . $this->quote($i);
+            }
+            elseif (strpos($table, '(') === false) {
+                if ($tableWithAlias = $this->extractAlias($table)) {
+                    $tables[$i] = $this->quote($tableWithAlias[1]) . ' ' . $this->quote($tableWithAlias[2]);
+                }
+                else {
+                    $tables[$i] = $this->quote($table);
+                }
+            }
+        }
+        return $tables;
+    }
+    protected function extractAlias($table) {
+        if (preg_match('/^(.*?)(?i:\s+as|)\s+([^ ]+)$/', $table, $matches)) {
+            return $matches;
+        }
+        return false;
     }
 }
