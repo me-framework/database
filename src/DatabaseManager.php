@@ -2,7 +2,7 @@
 namespace me\database;
 use Exception;
 use me\core\Component;
-use me\core\components\Container;
+use me\core\Container;
 use me\core\exceptions\HttpNotFound;
 use me\database\mysql\MysqlSchema;
 use me\database\pgsql\PgsqlSchema;

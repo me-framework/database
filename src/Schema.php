@@ -1,7 +1,7 @@
 <?php
 namespace me\database;
 use me\core\Component;
-use me\core\components\Container;
+use me\core\Container;
 /**
  * @property-read \me\database\QueryBuilder $queryBuilder Query Builder
  * @property-read \me\database\TableSchema $tableSchema Table Schema

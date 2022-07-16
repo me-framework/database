@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder\conditions;
-use me\core\helpers\ArrayHelper;
+use me\helpers\ArrayHelper;
 class HashConditionBuilder extends ConditionBuilder {
     /**
      * Method builds the raw SQL from the $condition that will not be additionally
