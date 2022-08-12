@@ -124,4 +124,13 @@ class Query extends Component {
         [$sql, $params] = $this->schema->getQueryBuilder()->build($q);
         return $this->schema->database->getCommand()->queryScalar($connection, $sql, $params);
     }
+    /**
+     * 
+     */
+    public function dump() {
+        [$sql, $params] = $this->schema->getQueryBuilder()->build($this);
+        echo '<pre>';
+        echo strtr($sql, $params);
+        exit;
+    }
 }
