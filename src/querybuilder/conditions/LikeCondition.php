@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder\conditions;
-use Exception;
+use me\exceptions\Exception;
 class LikeCondition extends SimpleCondition {
     protected $escapingReplacements;
     public function setEscapingReplacements($escapingReplacements) {

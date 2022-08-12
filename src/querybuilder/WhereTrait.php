@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder;
-use Exception;
+use me\exceptions\Exception;
 use me\database\querybuilder\conditions;
 trait WhereTrait {
     public $conditionClasses  = [

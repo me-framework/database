@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder\conditions;
-use Exception;
+use me\exceptions\Exception;
 class SimpleCondition extends Condition {
     /**
      * @var string $operator the operator to use. Anything could be used e.g. `>`, `<=`, etc.

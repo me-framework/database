@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder\conditions;
-use Exception;
+use me\exceptions\Exception;
 class InCondition extends Condition {
     private $operator;
     private $column;

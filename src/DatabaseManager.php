@@ -1,9 +1,10 @@
 <?php
 namespace me\database;
-use Exception;
 use me\core\Component;
 use me\core\Container;
-use me\core\exceptions\HttpNotFound;
+use me\helpers\ArrayHelper;
+use me\exceptions\Exception;
+use me\exceptions\HttpNotFound;
 use me\database\mysql\MysqlSchema;
 use me\database\pgsql\PgsqlSchema;
 use me\database\mssql\MssqlSchema;
@@ -30,11 +31,11 @@ class DatabaseManager extends Component {
     /**
      * @var \me\database\Schema[]
      */
-    private $_schema  = [];
+    private $_schema         = [];
     /**
      * @var array
      */
-    public $schemaMap = [
+    public $schemaMap        = [
         'mysql'  => MysqlSchema::class, // MySQL
         'pgsql'  => PgsqlSchema::class, // PostgreSQL
         'mssql'  => MssqlSchema::class, // older MSSQL driver on MS Windows hosts
@@ -61,10 +62,13 @@ class DatabaseManager extends Component {
             $name = $this->getDefault();
         }
         if (!array_key_exists($name, $this->connections)) {
-            throw new HttpNotFound("Schema { $name } Not Found.");
+            throw new HttpNotFound("Connection { $name } Not Found.");
         }
         if (is_array($this->connections[$name])) {
-            $this->connections[$name] = Container::build(array_merge($this->connectionConfig, $this->connections[$name]));
+            $config = array_merge($this->connectionConfig, $this->connections[$name]);
+            $class  = ArrayHelper::Remove($config, 'class');
+
+            $this->connections[$name] = Container::build($class, $config);
         }
         if (!($this->connections[$name] instanceof Connection)) {
             throw new Exception('Connection shuld be instanceof ' . Connection::class);
@@ -76,7 +80,7 @@ class DatabaseManager extends Component {
      */
     public function getCommand() {
         if ($this->_command === null) {
-            $this->_command = Container::build(['class' => Command::class]);
+            $this->_command = Container::build(Command::class);
         }
         return $this->_command;
     }
@@ -90,10 +94,9 @@ class DatabaseManager extends Component {
             if (!isset($this->schemaMap[$connection->driver])) {
                 throw new HttpNotFound("DB Driver { <b>$this->driver</b> } Not Found");
             }
-            $this->_schema[$name] = Container::build([
-                'class'      => $this->schemaMap[$connection->driver],
-                'database'   => $this,
-                'connection' => $connection
+            $this->_schema[$name] = Container::build($this->schemaMap[$connection->driver], [
+                        'database'   => $this,
+                        'connection' => $connection
             ]);
         }
         return $this->_schema[$name];

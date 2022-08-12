@@ -1,6 +1,6 @@
 <?php
 namespace me\database\querybuilder\conditions;
-use Exception;
+use me\exceptions\Exception;
 class NotCondition extends Condition {
     private $condition;
     public function __construct($condition) {

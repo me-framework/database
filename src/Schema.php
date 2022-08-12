@@ -37,6 +37,6 @@ abstract class Schema extends Component {
      * @return \me\database\Query Query
      */
     public function createQuery($modelClass) {
-        return Container::build(['class' => Query::class, 'schema' => $this, 'modelClass' => $modelClass]);
+        return Container::build(Query::class, ['schema' => $this, 'modelClass' => $modelClass]);
     }
 }
